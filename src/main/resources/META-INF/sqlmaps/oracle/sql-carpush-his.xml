@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.lgu.ccss.carpush.mapper.CarPushMapperOracle">	
+	
+	<insert id="insertCarPushSendHistory" parameterType="com.lgu.ccss.carpush.model.CarPushVO">
+		INSERT 
+			INTO TB_CAR_PUSH_QUEUE_HIS(
+				MSG_ID,
+				MSG_STATUS,
+				CODE,
+				MSG_TITLE,
+				MSG_CONT,
+				MSG_TYPE,
+				RECV_PHONE_NO,
+				SEND_TYPE,
+				SVR_ID,
+				ORG_NO,
+				CALLBACK_NO,
+				SEND_DT,
+				<!-- 2018.11.04 REG_DT 컬럼 삭제 (CVT)-->
+				<!-- REG_DT, -->
+				REG_ID,
+				UPD_DT,
+				UPD_ID,
+				EXP_DT,
+				RCV_REPORT,
+				READ_REPORT,
+				SEND_TRY_CNT,
+				PROCESS_DT,
+				DEVICE_TYPE
+			) 
+		VALUES (
+			#{msgId, jdbcType=VARCHAR},
+			#{msgStatus, jdbcType=VARCHAR},
+			#{code, jdbcType=VARCHAR},
+			#{msgTitle, jdbcType=VARCHAR},
+			#{msgCont, jdbcType=VARCHAR},
+			#{msgType, jdbcType=VARCHAR},
+			#{recvPhoneNo, jdbcType=VARCHAR},
+			#{sendType, jdbcType=VARCHAR},
+			#{svrId, jdbcType=VARCHAR},
+			#{orgNo, jdbcType=VARCHAR},
+			#{callbackNo, jdbcType=VARCHAR},
+			TO_DATE(#{sendDt},'YYYYMMDDHH24MISS'),
+			<!-- SYSDATE, -->
+			#{regId, jdbcType=VARCHAR},
+			SYSDATE,
+			#{updId, jdbcType=VARCHAR},
+			TO_DATE(#{expDt,jdbcType=VARCHAR},'YYYYMMDDHH24MISS'),
+			#{rcvReport, jdbcType=VARCHAR},
+			#{readReport, jdbcType=VARCHAR},
+			#{sendTryCnt, jdbcType=NUMERIC},
+			SYSDATE,
+			#{deviceType, jdbcType=VARCHAR}
+			
+		)
+	</insert>
+	
+	<update id="carPushUpdateReport" parameterType="com.lgu.ccss.carpush.model.CarPushVO">
+		UPDATE
+			TB_CAR_PUSH_QUEUE_HIS
+		SET
+			MSG_STATUS = #{msgStatus},
+			UPD_ID = #{updId},
+			UPD_DT = SYSDATE
+		WHERE
+			MSG_ID = #{msgId}
+		AND
+			MSG_STATUS NOT IN('0006', '2002', '2003', '2004')
+	</update>
+	
+</mapper>
